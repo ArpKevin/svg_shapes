@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG Shape Generator</title>
+</head>
+<body>
+    <h2>Choose a Shape:</h2>
+    <form id="svgForm">
+        <label for="shapeSelector">Shape:</label>
+        <select name="shape" id="shapeSelector">
+            <option value="rect">Rectangle</option>
+            <option value="circle">Circle</option>
+            <option value="ellipse">Ellipse</option>
+        </select>
+        <br><br>
+        <div id="shapeParams"></div>
+        <br><br>
+        <button type="button" id="generateBtn">Generate SVG</button>
+
+        <p id="urlDisplay"></p>
+    </form>
+
+    <script>
+        const shapeSelector = document.getElementById('shapeSelector');
+        const shapeParams = document.getElementById('shapeParams');
+        const generateBtn = document.getElementById('generateBtn');
+
+        const shapes = {
+            rect: [
+                { name: 'width', type: 'number' },
+                { name: 'height', type: 'number' },
+                { name: 'x', type: 'number' },
+                { name: 'y', type: 'number' },
+                { name: 'rx', type: 'number' },
+                { name: 'ry', type: 'number' },
+                { name: 'fill', type: 'text' }
+            ],
+            circle: [
+                { name: 'r', type: 'number' },
+                { name: 'cx', type: 'number' },
+                { name: 'cy', type: 'number' },
+                { name: 'fill', type: 'text' }
+            ],
+            ellipse: [
+                { name: 'rx', type: 'number' },
+                { name: 'ry', type: 'number' },
+                { name: 'cx', type: 'number' },
+                { name: 'cy', type: 'number' },
+                { name: 'fill', type: 'text' }
+            ]
+        };
+
+        function generateFormFields(shape) {
+            shapeParams.innerHTML = '';
+
+            if (shapes[shape]) {
+                shapes[shape].forEach(param => {
+                    const div = document.createElement('div');
+                    div.innerHTML = `
+                        ${param.name}: <input type="${param.type}" id="${param.name}" name="${param.name}">
+                        <br><br>
+                    `;
+                    shapeParams.appendChild(div);
+                });
+            }
+        }
+
+        shapeSelector.addEventListener('change', function () {
+            generateFormFields(this.value);
+        });
+
+        window.onload = () => generateFormFields(shapeSelector.value);
+
+        generateBtn.addEventListener('click', function () {
+            let baseUrl = 'svg_srv.php?shape=' + shapeSelector.value;
+
+            const formElements = shapeParams.querySelectorAll('input');
+            formElements.forEach(function (input) {
+                const value = input.value.trim();
+                if (value) {
+                    baseUrl += `&${input.name}=${value}`;
+                }
+            });
+
+            document.getElementById('urlDisplay').innerHTML = `<a href='${baseUrl}' target='_blank'>${baseUrl}</a`;
+        });
+    </script>
+</body>
+</html>

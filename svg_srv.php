@@ -8,8 +8,8 @@ $svgH = 500;
 
 print("<svg style='border: 1px solid black;' width='$svgW' height='$svgH'>");
 
-if (isset($_GET['alakzat'])) {
-    switch ($_GET['alakzat']) {
+if (isset($_GET['shape'])) {
+    switch ($_GET['shape']) {
         case "rect":
             if (isset($_GET['width']) && isset($_GET['height'])) {
                 $width = $_GET['width'];
